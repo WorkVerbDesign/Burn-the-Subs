@@ -10,6 +10,7 @@ from PIL import ImageFont, ImageDraw
 from dataBaseClass import Sub, db
 from gCodeParser import GParseQuick
 import random, math, re, os
+from frontPanel import LED_TYel, LED_BYel
 
 #======load vars======
 ttfFont = settings.ttfFontFile
@@ -29,11 +30,13 @@ absBoardY = -settings.boardHeightmm
 absBoardX = -settings.boardLengthmm
 xPosCal = settings.xPosCalmm
 yPosCal = settings.yPosCalmm
+border = settings.borderOffset
 
 entered = settings.nameEntered
 placed = settings.namePlaced
 gcode = settings.nameGcode
 burnt = settings.nameBurnt
+
 
 def fscale(fMin, fMax, numEntries, curve): 
     exp = -(numEntries * curve)
@@ -84,6 +87,8 @@ def placeNames():
             )
     
     for sub in nameToPlace:
+        LED_TYel.on()
+        
         totalEntries = Sub.select().where(Sub.status >= placed).count()
         
         fontSize = fscale(fontMin, fontMax, totalEntries, curve)
@@ -111,8 +116,9 @@ def placeNames():
             #instead just do a random location for test
             board_l2 = board_l - l
             board_h2 = board_h - h
-            Rboard_l = random.randint(0,board_l2)
-            Rboard_h = random.randint(0,board_h2)
+            pixOffset = border * pixMM
+            Rboard_l = random.randint((0 + pixOffset),(board_l2 - pixOffset))
+            Rboard_h = random.randint((0 + pixOffset),(board_h2 - pixOffset))
             fail = False
             
             #look for collision
@@ -127,6 +133,7 @@ def placeNames():
                     #compare backing to text for overlap
                     if (r,g,b,a) != (255,255,255,255) and (r1,g1,b1,a1) != (255,255,255,255):
                         print("placer: :failfish:")
+                        LED_TYel.blink()
                         fail = True
                         break
                 if fail == True:
@@ -142,6 +149,7 @@ def placeNames():
         sub.fontSize = fontSize
         sub.status = placed
         sub.save()
+        LED_TYel.off()
         makeGcode(sub)
 
         
@@ -182,6 +190,7 @@ def makeGcode(name):
     hkern = None
     
     for c in name.userName:
+        LED_BYel.on()
         #define our letter in Gcode becaus reasons
         entryString += ("(char = \"" + c + "\")\n")
     
@@ -252,6 +261,7 @@ def makeGcode(name):
         
         #store for next loop
         lastChar = c
+        LED_BYel.off()
         
     #done with sub
     name.gCode = entryString

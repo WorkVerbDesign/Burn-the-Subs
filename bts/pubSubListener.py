@@ -3,6 +3,7 @@ import settings
 import codes #py file containing secret keys and ID info
 from dataBaseClass import Sub
 from datetime import datetime
+from frontPanel import LED_Blue
 
 #make sure to install the websocket module with: sudo pip3 install websocket-client
 
@@ -11,7 +12,6 @@ from datetime import datetime
 
 #user name vs display name:
 #need to check if display name has non ^[a-zA-Z0-9_]{4,25}$ chars use username instead 
-
 
 pingstarttime = 0
 pingTwitch = 0
@@ -32,6 +32,7 @@ def ws1_on_message(ws, message):
         if jsonReturn["type"] == "PONG": #Take care of pong responses
             pingstarttime = 0
             print("PONG received")
+            LED_Blue.on()
         elif jsonReturn["type"] == "RECONNECT": #Close if twitch tells us so and reconnect
             print(jsonReturn)
             ws.close()
@@ -89,12 +90,14 @@ def ws1_on_error(ws, error): #get's called when there was a websocket connection
     print (error)
     pingTwitch = 0
     SUBdidWork = 0
+    LED_Blue.blink()
 
 def ws1_on_close(ws): #get's called when the websocket connection was closed
     global pingTwitch, SUBdidWork
     print("### ws1 closed ###")
     pingTwitch = 0
     SUBdidWork = 0
+    LED_Blue.off()
 
 def ws1_on_open(ws): #get's called when the websocket connection was opened (connected to the server and handshake successfull)
     global pingTwitch
@@ -115,6 +118,7 @@ def pingTwitchServersToKeepTheConnectionAliveTask(): #This PINGs the server ever
         if pingTwitch:
             print("Pinging Twitch")
             ws1.send(json.dumps({"type": "PING"}))
+            LED_Blue.off()
             pingstarttime = time.time() #we could later do something with this time but we don't have to
             time.sleep(10) #wait 10 sec for ping response
             if not pingstarttime: #is pingstarttime was not reset, close the connection

@@ -17,15 +17,16 @@ ttfFontFile = "fonts/Avenir-Medium-09.ttf"
 gCodeFontFile = "fonts/Avenir-Medium-GCode.txt"
 centerMaskPNG = "center.png"
 
-pixelDensity = 12
-boardHeightmm = 270 #340
-boardLengthmm = 1392
+pixelDensity = 12 #pix/mm
+boardHeightmm = 340 #mm
+boardLengthmm = 1392 #mm
+borderOffset = 10 #mm
 
 gCodeDecimals = 4
 xPosCalmm = 0 
 yPosCalmm = 0 
 #fontSizeCurve = 0.004
-fontSizeCurve = 0.004
+fontSizeCurve = 0.005
 fontMaxPixHeight = 240 #font size is in pixels
 fontMinPixHeight = 80
 collisionPixelRadius = 9
@@ -49,7 +50,7 @@ start_cmd = 'M4 S1000\n'
 feed_rate = 'F800.0000\n'
 
 stop_cmd = 'M3\nM5\n'
-return_pos = 'G0 X-2.000 Y-2.000\n'
+pulloff_pos = 'G0 X-102.00 Y-2.00\n'
 
 pwr_cycle = '\x18\n'
 

@@ -22,7 +22,7 @@ startCmd = settings.start_cmd
 feedCmd = settings.feed_rate
 
 stopCmd = settings.stop_cmd
-returnCmd = settings.return_pos
+pulloffCmd = settings.pulloff_pos
 
 lineCounter = []
 
@@ -55,7 +55,7 @@ def gSend():
         name.save()
     
     #footer
-    gBurn(stopCmd + returnCmd, s)
+    gBurn(stopCmd + pulloffCmd, s)
     
     print('burner: done burning!')
     s.close()
