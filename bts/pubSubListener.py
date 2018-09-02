@@ -26,8 +26,20 @@ userID = settings.pubSubUserId #lebtvlive
 listenrequest = {"type": "LISTEN", "nonce": "e4t5v345nz3sm", "data": { "topics": ["channel-subscribe-events-v1." + channelID], "auth_token": twitchOAuthToken}} #this is for sub events
 ws1 = ""
 
+#log file
+loggies = settings.wsLogFile
+
 def ws1_on_message(ws, message):
     jsonReturn = json.loads(message)
+    
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" raw message: ")
+    logOutput.write(message)
+    logOutput.write("\n")
+    logOutput.close()
+    
     if "type" in jsonReturn:
         if jsonReturn["type"] == "PONG": #Take care of pong responses
             pingstarttime = 0
@@ -78,12 +90,20 @@ def checkName(name):
         
 def enterDb(entry):
     print("pubSub: entering " + entry)
-    dateTime = datetime.utcnow()
+    datetime = datetime.utcnow()
     dbEntry = Sub.create(
                         userName = entry,
-                        entryTime = dateTime
+                        entryTime = datetime
                     )
     dbEntry.save()
+    
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" entered: " + entry)
+    logOutput.write(" at: ")
+    logOutput.write(datetime.strftime('%Y,%m,%d,%H:%M:%S:%f') + "\n")
+    logOutput.close()
        
 def ws1_on_error(ws, error): #get's called when there was a websocket connection error
     global pingTwitch, SUBdidWork
@@ -91,6 +111,14 @@ def ws1_on_error(ws, error): #get's called when there was a websocket connection
     pingTwitch = 0
     SUBdidWork = 0
     LED_Blue.blink()
+    
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" ws1 error: ")
+    logOutput.write(error)
+    logOutput.write("\n")
+    logOutput.close()
 
 def ws1_on_close(ws): #get's called when the websocket connection was closed
     global pingTwitch, SUBdidWork
@@ -98,17 +126,40 @@ def ws1_on_close(ws): #get's called when the websocket connection was closed
     pingTwitch = 0
     SUBdidWork = 0
     LED_Blue.off()
+    
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" ws1 closed\n")
+    logOutput.close()
 
 def ws1_on_open(ws): #get's called when the websocket connection was opened (connected to the server and handshake successfull)
     global pingTwitch
     print("### ws1 opened ###")
     pingTwitch = 1
+    
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" ws1 opened\n")
+    logOutput.close()
+    
     subToTopics()
+    
+    
 
 def ws1_start(): #this is the main server loop
     while True:
-        ws1.run_forever()
         print("### ws1 restart ###")
+        
+        #log file
+        logOutput = open(loggies, "a")
+        logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+        logOutput.write(" ws1 restart\n")
+        logOutput.close()
+        
+        ws1.run_forever()
+
 
 def subToTopics(): #send our listen request
     ws1.send(json.dumps(listenrequest))
@@ -128,6 +179,13 @@ def pingTwitchServersToKeepTheConnectionAliveTask(): #This PINGs the server ever
 def webSocketInit():
     global ws1
     print("pubSub started, opening socket")
+    
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" pubSub Started\n")
+    logOutput.close()
+    
     ws1 = websocket.WebSocketApp("wss://pubsub-edge.twitch.tv", on_message = ws1_on_message, on_error = ws1_on_error, on_close = ws1_on_close) #Create Websocket Client Object
     ws1.on_open = ws1_on_open
     threading.Thread(target=ws1_start).start() #Start Websocket Thread

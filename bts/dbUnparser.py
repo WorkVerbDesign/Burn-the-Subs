@@ -8,7 +8,8 @@ import settings
 from dataBaseClass import Sub
 placed = settings.namePlaced
 
-outputFile = "output.txt"
+outputFile = settings.gCodeFile
+
 def unParsify():
     output = open(outputFile, "a")
 

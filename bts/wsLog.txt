@@ -1,0 +1,8 @@
+2018,09,02,15:26:41:597890 pubSub Started
+2018,09,02,15:26:41:609591 ws1 restart
+2018,09,02,15:26:42:263366 ws1 opened
+2018,09,02,15:26:42:381570 raw message: { "type": "PONG" }
+
+
+2018,09,02,15:26:42:395895 raw message: {"type":"RESPONSE","error":"","nonce":"e4t5v345nz3sm"}
+

@@ -58,7 +58,7 @@ def testies():
 def endTheDamnTest():
     global threadQuit
     
-    print("main: test finished!")
+    print("main: trying to exit clean!")
     print("main: imma make a gcode text now")  
     threadQuit = True
     stopit()

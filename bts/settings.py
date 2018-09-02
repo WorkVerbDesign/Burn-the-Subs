@@ -17,6 +17,9 @@ ttfFontFile = "fonts/Avenir-Medium-09.ttf"
 gCodeFontFile = "fonts/Avenir-Medium-GCode.txt"
 centerMaskPNG = "center.png"
 
+wsLogFile = "wsLog.txt"
+gCodeFile = "output.txt"
+
 pixelDensity = 12 #pix/mm
 boardHeightmm = 340 #mm
 boardLengthmm = 1392 #mm
@@ -59,3 +62,5 @@ nameEntered = 0
 namePlaced = 1
 nameGcode = 2
 nameBurnt = 3
+
+
