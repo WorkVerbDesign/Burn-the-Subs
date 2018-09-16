@@ -47,10 +47,13 @@ def ws1_on_message(ws, message):
             LED_Blue.on()
         elif jsonReturn["type"] == "RECONNECT": #Close if twitch tells us so and reconnect
             print(jsonReturn)
-            ws.close()
+            try:
+                ws.close()
+            except:
+                pass
         elif jsonReturn["type"] == "RESPONSE": #We get this as a response to our subToTopic request
             if jsonReturn["nonce"] == "e4t5v345nz3sm" and jsonReturn["error"] == "": #validate this is the right response and there was no error
-                print("Sub successful")
+                print("socket sub successful")
                 SUBdidWork = 1
             else: #If there was something wrong
                 print(jsonReturn)
@@ -61,15 +64,25 @@ def ws1_on_message(ws, message):
             print(jsonReturn) #if there is anything else, just print it(shouldn't be the case)
 
 def makeEntry(message):
+    #log file
+    logOutput = open(loggies, "a")
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    logOutput.write(" ")
+    logOutput.write(json.dumps(message))
+    logOutput.write('\n')
+    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
+    
     if 'recipient_user_name' in message.keys():
         repName = message['recipient_display_name']
         repUser = message['recipient_user_name']
         
         if checkName(repName):
             enterDb(repName)
+            logOutput.write("using repName: " + repName)
             #print(repName)
         else:
             enterDb(repUser)
+            logOutput.write("using repUser: " + repUser)
             #print(repUser)
     else:
         dispName = message['display_name']
@@ -77,11 +90,16 @@ def makeEntry(message):
 
         if checkName(dispName):
             enterDb(dispName)
+            logOutput.write("using dispName: " + dispName)
             #print(dispName)
         else:
             enterDb(usrName)
+            logOutput.write("using usrName: " + usrName)
             #print("fuck you buddy")
-
+            
+    logOutput.write("\n")            
+    logOutput.close()
+    
 def checkName(name):
     if re.search(r'[^a-zA-Z0-9_]', name):
         return False
@@ -90,21 +108,14 @@ def checkName(name):
         
 def enterDb(entry):
     print("pubSub: entering " + entry)
-    datetime = datetime.utcnow()
+    
+    dateInfo = datetime.utcnow()
     dbEntry = Sub.create(
                         userName = entry,
-                        entryTime = datetime
+                        entryTime = dateInfo
                     )
     dbEntry.save()
-    
-    #log file
-    logOutput = open(loggies, "a")
-    logOutput.write(datetime.utcnow().strftime('%Y,%m,%d,%H:%M:%S:%f'))
-    logOutput.write(" entered: " + entry)
-    logOutput.write(" at: ")
-    logOutput.write(datetime.strftime('%Y,%m,%d,%H:%M:%S:%f') + "\n")
-    logOutput.close()
-       
+
 def ws1_on_error(ws, error): #get's called when there was a websocket connection error
     global pingTwitch, SUBdidWork
     print (error)

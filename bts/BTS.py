@@ -110,7 +110,7 @@ Btn_Blk.when_pressed = LED_BB_Red.on
 Btn_Blk.when_released = blkButton
             
 if __name__ == "__main__":
-    print("Burn the Subs started")
+    print("main: Burn the Subs started")
     try:  
         #check if there are derelict entries
         deraLict()

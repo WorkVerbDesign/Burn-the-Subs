@@ -1,0 +1,11 @@
+This is just a string of stuff to paste into python3's
+console to enter a name to the db. We're still working out
+some websocket and multi-subscriber nonsesne so till then
+this may come in handy.
+
+from datetime import datetime
+from dataBaseClass import Sub
+
+entry = "user's name here"
+dateTime = datetime.utcnow()
+dbEntry = Sub.create(userName = entry,entryTime = dateTime)

@@ -31,7 +31,7 @@ yPosCalmm = 0
 #fontSizeCurve = 0.004
 fontSizeCurve = 0.005
 fontMaxPixHeight = 240 #font size is in pixels
-fontMinPixHeight = 60
+fontMinPixHeight = 80
 collisionPixelRadius = 9
 
 pubSubUserId = "61468297" #lebtvlive

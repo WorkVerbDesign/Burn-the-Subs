@@ -76,8 +76,11 @@ def gBurn(rawString, s, regularFlag = False):
             lineCounter.append(len(block)+1)
             
             #debuuuug
-            print(lineCounter)
-            print(sum(lineCounter))
+            #print(lineCounter)
+            #print(sum(lineCounter))
+            
+            #pump ya brakes and drive slow homie
+            time.sleep(0.02)
             
             while sum(lineCounter) >= buffer - 1 or s.inWaiting() > 0:
                processRx(lineCounter, s)
@@ -101,8 +104,9 @@ def processRx(lineCounter, s):
         #kill everything here
     else:
         del lineCounter[0]
-        print(lineCounter)
-        print(sum(lineCounter))
+        time.sleep(0.02)
+        #print(lineCounter)
+        #print(sum(lineCounter))
 
                 
 if __name__ == "__main__":
