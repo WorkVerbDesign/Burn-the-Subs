@@ -32,7 +32,7 @@ yPosCalmm = 0
 fontSizeCurve = 0.005
 fontMaxPixHeight = 240 #font size is in pixels
 fontMinPixHeight = 60
-collisionPixelRadius = 9
+collisionPixelRadius = 20 #yeah so this is actually wrong, it's int(font size/collision) so, that's bad
 
 pubSubUserId = "61468297" #lebtvlive
 
