@@ -100,7 +100,9 @@ def placeNames():
         draw.text((place.positionX,place.positionY), place.userName, (0,0,0), font = font)
     
     #check database for names to place
-    nameToPlace = (Sub
+    # WARNING: we must convert this to a list from the default lazy iterator,
+    # or the value of totalEntries won't update due to SQL isolation weirdness
+    nameToPlace = list(Sub
              .select()
              .where(Sub.status == entered)
              .order_by(Sub.entryTime)
@@ -110,6 +112,7 @@ def placeNames():
         LED_TYel.on()
         
         totalEntries = Sub.select().where(Sub.status >= placed).count()
+        print("DEBUG: read totalEntries = %i" % totalEntries)
         
         fontSize = fscale(fontMin, fontMax, totalEntries, curve)
         
