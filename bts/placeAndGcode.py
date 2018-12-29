@@ -98,6 +98,8 @@ def placeNames():
     for place in nameWasPlaced:
         font = ImageFont.truetype(ttfFont, place.fontSize)
         draw.text((place.positionX,place.positionY), place.userName, (0,0,0), font = font)
+
+    backing_bits = imageToBits(backing)
     
     #check database for names to place
     # WARNING: we must convert this to a list from the default lazy iterator,
@@ -132,12 +134,15 @@ def placeNames():
         draw1 = ImageDraw.Draw(textBox)
         
         draw1.text((blurRad,blurRad), sub.userName, (0,0,0), font = font)
+        # must be the same as what we finally draw to the image or stuff breaks
+        textBox_noblur_bits = imageToBits(textBox)
         
         textBox = textBox.filter(ImageFilter.GaussianBlur(radius=blurRad))
-
-        backing_bits = imageToBits(backing)
         textBox_bits = imageToBits(textBox)
-        
+
+        #new_backing_bits = imageToBits(backing)
+        #assert backing_bits == new_backing_bits
+
         failcount = 0
         start_time = time.perf_counter()
         while fail == True:
@@ -156,7 +161,7 @@ def placeNames():
                 if ((backing_bits[i+Rboard_h] >> shift_by) & textBox_bits[i]) != 0:
                     failcount += 1
                     runtime = time.perf_counter() - start_time
-                    if (failcount % 1000) == 0:
+                    if (failcount % 2000) == 0:
                         print("placer: %s :failfish: #%i, %f sec (avg %f)" % (sub.userName, failcount, runtime, runtime / failcount))
                         LED_TYel.blink()
                     fail = True
@@ -188,6 +193,9 @@ def placeNames():
                  
         #now overlay that onto the board
         draw.text((Rboard_l+blurRad,Rboard_h+blurRad), sub.userName, (0,0,0), font = font)
+
+        for i in range(0, h, 1):
+            backing_bits[i+Rboard_h] |= textBox_noblur_bits[i] << shift_by
         
         #update db with good location
         #sub.transaction(lock_type=None)
