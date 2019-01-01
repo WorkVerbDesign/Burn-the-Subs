@@ -1,11 +1,16 @@
-import websocket, threading, time, json, random, re
-import settings
-import codes #py file containing secret keys and ID info
-from dataBaseClass import Sub
+import json
+import random
+import re
+import threading
+import time
 from datetime import datetime
-from frontPanel import LED_Blue
 
-#make sure to install the websocket module with: sudo pip3 install websocket-client
+import websocket
+
+from bts import codes  # py file containing secret keys and ID info
+from bts import settings
+from bts.dataBaseClass import Sub
+from bts.frontPanel import LED_Blue
 
 #to get user id: https://api.twitch.tv/kraken/users/<name>?client_id=apitoken
 #to get channel id: https://api.twitch.tv/kraken/channels/<name>?client_id=apitoken

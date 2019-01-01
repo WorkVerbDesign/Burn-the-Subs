@@ -4,8 +4,8 @@
 # which is just a butt-ton of gcode
 # status = 0: name entered 1: name placed 2:gcode ready 3: burnt to board
 
-import settings
-from dataBaseClass import Sub
+from bts import settings
+from bts.dataBaseClass import Sub
 placed = settings.namePlaced
 
 outputFile = settings.gCodeFile

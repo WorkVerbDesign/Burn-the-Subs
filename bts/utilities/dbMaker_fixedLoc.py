@@ -4,9 +4,11 @@
 #
 # just to make an test DB for burn the subs
 
+import time
 from datetime import datetime
-from dbShit import Sub
-import os, time
+
+from bts.dataBaseClass import Sub
+
 
 def main():
     fileName = open("subscriberListTest.txt")
@@ -19,7 +21,7 @@ def main():
             userName = entry,
             entryTime = dateTime,
             status = 2,
-            userName = 'Yfj',
+            # userName = 'Yfj',
             fontSize = 72,
             positionX = 1000,
             positionY = 1000

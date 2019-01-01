@@ -2,12 +2,12 @@
 #app had to be registered properly from the reddit thread steps
 #https://www.reddit.com/r/Twitch/comments/6ycems/an_example_python_script_to_retrieve_a_list_of/
 
-from urllib.parse import urlencode
+import json
+
 from requests import Session
 from requests.adapters import HTTPAdapter
-from requests.exceptions import HTTPError, InvalidURL, ConnectionError
-import json
-import codes
+
+from bts import codes
 
 ##########################################################
 #                Configure your stuff here               #

@@ -1,9 +1,9 @@
 # make a .png image 
 # from the burn the subs database
-from PIL import Image
-from PIL import ImageFont, ImageDraw
-from dataBaseClass import Sub
-import settings
+from PIL import Image, ImageFont, ImageDraw
+
+from bts import settings
+from bts.dataBaseClass import Sub
 
 pixMM = settings.pixelDensity
 board_h = settings.boardHeightmm*pixMM   #int board width should calc in code, meh

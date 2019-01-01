@@ -4,8 +4,9 @@
 
 from PIL import Image
 from PIL import ImageFont, ImageDraw
-from dataBaseClass import Sub
-import settings
+
+from . import settings
+from .dataBaseClass import Sub
 
 #======load vars======
 ttfFont = settings.ttfFontFile

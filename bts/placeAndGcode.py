@@ -4,13 +4,16 @@
 #the placer takes too long to run on larger names
 #due to pixel compare. F. So making gcode after placement.
 
-import settings
-from PIL import Image, ImageFilter
-from PIL import ImageFont, ImageDraw
-from dataBaseClass import Sub, db
-from gCodeParser import GParseQuick
-import random, math, re, os
-from frontPanel import LED_TYel, LED_BYel
+import math
+import random
+import re
+
+from PIL import Image, ImageFilter, ImageFont, ImageDraw
+
+from bts import settings
+from bts.dataBaseClass import Sub
+from bts.frontPanel import LED_TYel, LED_BYel
+from bts.gCodeParser import GParseQuick
 
 #======load vars======
 ttfFont = settings.ttfFontFile

@@ -5,9 +5,12 @@
 # just to make an test DB for burn the subs
 # returns the number of entries it creates.
 
+import random
+import time
 from datetime import datetime
-from dataBaseClass import Sub
-import os, time, random
+
+from bts.dataBaseClass import Sub
+
 
 def makeDb():
     fileName = open("subscriberListTest.txt")
