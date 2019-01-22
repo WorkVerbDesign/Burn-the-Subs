@@ -23,8 +23,9 @@ def makeDb():
                                 entryTime = dateTime
                             )
         dbEntry.save()
-        print("dbmaker: " + entry)
+        #print("dbmaker: " + entry)
         #time.sleep(random.randint(10,100)) #up to 10 seconds for testing
+        time.sleep(0.2)
     
     print("dbMaker: done, you fuck.")
     fileName.close()

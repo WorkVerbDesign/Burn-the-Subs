@@ -29,15 +29,12 @@ gCodeDecimals = 4
 xPosCalmm = 0 
 yPosCalmm = 0 
 #fontSizeCurve = 0.004
-fontSizeCurve = 0.005
-fontMaxPixHeight = 240 #font size is in pixels
-fontMinPixHeight = 80
-collisionPixelRadius = 9
+fontSizeCurve = 0.002
+fontMaxPixHeight = 120 #font size is in pixels
+fontMinPixHeight = 30
+collisionPixelRadius = 20
 
 pubSubUserId = "61468297" #lebtvlive
-
-#not in there yet, should it fail or lower font size
-failsToExit = 700
 
 bigRedButtonPin = 6
 bufferGRBL = 128
