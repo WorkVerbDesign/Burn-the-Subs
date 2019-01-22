@@ -3,8 +3,9 @@
 # attached to Burn the Subs actually work. 
 # so yeah, that.
 
-from gpiozero import Button, LED
 from time import sleep
+
+from gpiozero import Button, LED
 
 Btn_Red = Button(17)
 Btn_Blk = Button(27)

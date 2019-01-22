@@ -33,12 +33,10 @@ THE SOFTWARE.
 ---------------------
 """
 
-import serial
-import re
-import time
-import sys
 import argparse
-# import threading
+import time
+
+import serial
 
 RX_BUFFER_SIZE = 128
 

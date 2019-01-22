@@ -5,8 +5,9 @@
 # status = 0: name entered 1: name placed 2:gcode ready 3: burnt to board
 
 from peewee import *
-import settings
 from playhouse.sqliteq import SqliteQueueDatabase
+
+from bts import settings
 
 dbFile = settings.dataBaseFile
 db = SqliteQueueDatabase(dbFile)

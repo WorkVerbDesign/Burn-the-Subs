@@ -3,16 +3,14 @@
 #   This is basically burn the subs
 # wonder if this should check for status ==1 first boot, use gcode maker
 
-import settings
 import sys
 from threading import Thread
-from time import sleep
 
-from dataBaseClass import Sub, db
-from placeNoGcode import placeNames
-from makePng import makeOnePng
-
-from dbMaker import makeDb
+from . import settings
+from .dataBaseClass import Sub, db
+from .dbMaker import makeDb
+from .makePng import makeOnePng
+from .placeNoGcode import placeNames
 
 threadQuit = False
 

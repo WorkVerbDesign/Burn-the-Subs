@@ -1,4 +1,4 @@
-import lebobs
+from . import lebobs
 
 if __name__ == "__main__":
     lebobs.switchToscene("Scenename")

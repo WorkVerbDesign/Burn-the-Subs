@@ -1,6 +1,8 @@
-import serial
-import settings
 import time
+
+import serial
+
+from bts import settings
 
 speed = settings.serialSpeed
 serialLoc = settings.serialAddy

@@ -1,5 +1,7 @@
-from websocket import create_connection
 import json
+
+from websocket import create_connection
+
 
 def switchToscene(scenename):
     _sendToOBS({"request-type": "SetCurrentScene", "scene-name": scenename, "message-id": "lebobs"})

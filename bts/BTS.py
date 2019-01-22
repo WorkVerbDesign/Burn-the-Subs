@@ -3,21 +3,20 @@
 #   This is basically burn the subs
 # wonder if this should check for status ==1 first boot, use gcode maker
 
-import settings
 import sys
 from threading import Thread
 from time import sleep
 
-from dataBaseClass import Sub, db
-from placeAndGcode import placeNames, makeGcode
-from sendGcode import gSend
-from pubSubListener import ws1_start, pingTwitchServersToKeepTheConnectionAliveTask, webSocketInit
-from dbUnparser import unParsify
-from frontPanel import Btn_Red, Btn_Blk, LED_BB_Red, LED_BB_Grn, LED_RB_Red, LED_Grn, LED_Red, LED_RB_Grn
-from ohShit import stopit
-
-#for testing
-from dbMaker import makeDb
+from bts import settings
+from bts.dataBaseClass import Sub, db
+# for testing
+from bts.dbMaker import makeDb
+from bts.dbUnparser import unParsify
+from bts.frontPanel import Btn_Red, Btn_Blk, LED_BB_Red, LED_BB_Grn, LED_RB_Red, LED_Grn, LED_Red, LED_RB_Grn
+from bts.ohShit import stopit
+from bts.placeAndGcode import placeNames, makeGcode
+from bts.pubSubListener import webSocketInit
+from bts.sendGcode import gSend
 
 threadQuit = False
 gDone = False

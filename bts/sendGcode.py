@@ -5,9 +5,13 @@
 # turn b's into s.write(line.encode())
 # NOT THE BEES keep the \n
 #
-import settings
-import serial, time
-from dataBaseClass import Sub
+
+import time
+
+import serial
+
+from bts import settings
+from bts.dataBaseClass import Sub
 
 # settings
 speed = settings.serialSpeed

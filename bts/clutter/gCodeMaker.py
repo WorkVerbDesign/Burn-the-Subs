@@ -12,10 +12,11 @@
 # using cueXXIII's gcode parser
 # https://graphicdesign.stackexchange.com/questions/37127/svg-font-units-per-em-to-mm
 
-import settings
-from dataBaseClass import Sub, db
-from gCodeParser import GParseQuick
-import re, os
+import re
+
+from .. import settings
+from ..dataBaseClass import Sub
+from ..gCodeParser import GParseQuick
 
 #============= Constants ============
 mm2pix = 1/settings.pixelDensity #12 pixels to 1 mm
