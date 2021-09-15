@@ -9,7 +9,7 @@ from PIL import Image, ImageFilter
 from PIL import ImageFont, ImageDraw
 from dataBaseClass import Sub, db
 from gCodeParser import GParseQuick
-import random, math, re, os
+import random, math, re, os, time
 from frontPanel import LED_TYel, LED_BYel
 
 #======load vars======
@@ -50,6 +50,26 @@ def fscale(fMin, fMax, numEntries, curve):
         
     return result
     
+def imageToBits(img):
+    """Quickly creates bitmap of in-use pixels in image
+
+       Outputs a list containing one long integer per image row, with
+       the most significant representing the leftmost pixel and the
+       least significant bit the rightmost one"""
+    img = img.convert(mode="L")
+    img = img.point(lambda i: 0 if i == 255 else 1, mode="1")
+    w,h = img.size; bitlines = []; data = img.tobytes()
+
+    bw = (w+7)//8 # width of an image row in bytes
+    assert len(data) == bw*h
+
+    for i in range(0,h):
+        line = int.from_bytes(data[i*bw:(i+1)*bw], byteorder="big")
+        line >>= ((8 - w%8) % 8) # chop off padding bits on right
+        bitlines.append(line)
+
+    return bitlines
+
 def placeNames():
     try:
         center = Image.open(centerFile)
@@ -78,9 +98,13 @@ def placeNames():
     for place in nameWasPlaced:
         font = ImageFont.truetype(ttfFont, place.fontSize)
         draw.text((place.positionX,place.positionY), place.userName, (0,0,0), font = font)
+
+    backing_bits = imageToBits(backing)
     
     #check database for names to place
-    nameToPlace = (Sub
+    # WARNING: we must convert this to a list from the default lazy iterator,
+    # or the value of totalEntries won't update due to SQL isolation weirdness
+    nameToPlace = list(Sub
              .select()
              .where(Sub.status == entered)
              .order_by(Sub.entryTime)
@@ -90,6 +114,7 @@ def placeNames():
         LED_TYel.on()
         
         totalEntries = Sub.select().where(Sub.status >= placed).count()
+        print("DEBUG: read totalEntries = %i" % totalEntries)
         
         fontSize = fscale(fontMin, fontMax, totalEntries, curve)
         
@@ -109,9 +134,17 @@ def placeNames():
         draw1 = ImageDraw.Draw(textBox)
         
         draw1.text((blurRad,blurRad), sub.userName, (0,0,0), font = font)
+        # must be the same as what we finally draw to the image or stuff breaks
+        textBox_noblur_bits = imageToBits(textBox)
         
         textBox = textBox.filter(ImageFilter.GaussianBlur(radius=blurRad))
-        
+        textBox_bits = imageToBits(textBox)
+
+        #new_backing_bits = imageToBits(backing)
+        #assert backing_bits == new_backing_bits
+
+        failcount = 0
+        start_time = time.perf_counter()
         while fail == True:
             #instead just do a random location for test
             board_l2 = board_l - l
@@ -122,6 +155,21 @@ def placeNames():
             fail = False
             
             #look for collision
+            shift_by = board_l - l - Rboard_l
+            for i in range(0, h, 1):
+                # align the images by chopping off pixels from the right of backing
+                if ((backing_bits[i+Rboard_h] >> shift_by) & textBox_bits[i]) != 0:
+                    failcount += 1
+                    runtime = time.perf_counter() - start_time
+                    if (failcount % 2000) == 0:
+                        print("placer: %s :failfish: #%i, %f sec (avg %f)" % (sub.userName, failcount, runtime, runtime / failcount))
+                        LED_TYel.blink()
+                    fail = True
+                    break
+            if fail:
+                continue
+
+            # try the old check too, just in case
             for i in range(0, l, 1):
                 for j in range(0, h, 1):
                     shift_l = i + Rboard_l
@@ -132,15 +180,22 @@ def placeNames():
 
                     #compare backing to text for overlap
                     if (r,g,b,a) != (255,255,255,255) and (r1,g1,b1,a1) != (255,255,255,255):
-                        print("placer: :failfish:")
+                        failcount += 1
+                        runtime = time.perf_counter() - start_time
+                        print("placer: OH NO SURPRISE %s :failfish: #%i at (%i, %i) in %f sec (avg %f)" % (sub.userName, failcount, i, j, runtime, runtime / failcount))
                         LED_TYel.blink()
-                        fail = True
+                        fail = True; assert(False)
                         break
                 if fail == True:
                     break
+        runtime = time.perf_counter() - start_time
+        print("placer: placed %s in %i attempts and %f seconds" % (sub.userName, failcount+1, runtime))
                  
         #now overlay that onto the board
         draw.text((Rboard_l+blurRad,Rboard_h+blurRad), sub.userName, (0,0,0), font = font)
+
+        for i in range(0, h, 1):
+            backing_bits[i+Rboard_h] |= textBox_noblur_bits[i] << shift_by
         
         #update db with good location
         #sub.transaction(lock_type=None)
