@@ -1,0 +1,9 @@
+# Required Packages
+# Install with pip install -r requirements.txt
+websocket-client
+serial
+peewee
+gpiozero
+requests
+pillow
+pyserial

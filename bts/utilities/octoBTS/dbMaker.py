@@ -6,8 +6,9 @@
 # returns the number of entries it creates.
 
 from datetime import datetime
-from dataBaseClass import Sub
-import os, time, random
+
+from .dataBaseClass import Sub
+
 
 def makeDb():
     fileName = open("subscriberListTest.txt")

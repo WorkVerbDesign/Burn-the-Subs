@@ -7,11 +7,14 @@
 # run the gcode maker after it saves the entry passing the
 # sub object into the other function.
 
-import settings
+import math
+import random
+
 from PIL import Image, ImageFilter
 from PIL import ImageFont, ImageDraw
-from dataBaseClass import Sub, db
-import random, math
+
+from .. import settings
+from ..dataBaseClass import Sub
 
 #load settings!
 fontFile = settings.ttfFontFile
